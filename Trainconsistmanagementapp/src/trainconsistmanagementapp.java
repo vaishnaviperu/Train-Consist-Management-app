@@ -1,40 +1,33 @@
-import java.util.LinkedList;
+import java.util.LinkedHashSet;
 
 public class trainconsistmanagementapp {
 
     public static void main(String[] args) {
 
         System.out.println("========================================");
-        System.out.println(" UC4 - Maintain Ordered Bogie Consist");
+        System.out.println(" UC5 - Preserve Insertion Order of Bogies");
         System.out.println("========================================");
 
-        // Step 1: Create a LinkedList to maintain ordered bogie consist
-        LinkedList<String> trainConsist = new LinkedList<>();
+        // Step 1: Create a LinkedHashSet to store bogies in insertion order
+        LinkedHashSet<String> trainFormation = new LinkedHashSet<>();
 
-        // Step 2: Add bogies in physical train sequence
-        trainConsist.add("Engine");
-        trainConsist.add("Sleeper");
-        trainConsist.add("AC");
-        trainConsist.add("Cargo");
-        trainConsist.add("Guard");
+        // Step 2: Add bogies in the order they are attached
+        trainFormation.add("Engine");
+        trainFormation.add("Sleeper");
+        trainFormation.add("Cargo");
+        trainFormation.add("Guard");
 
-        // Step 3: Display initial consist
-        System.out.println("\nInitial Train Consist:");
-        System.out.println(trainConsist);
+        // Step 3: Attempt to add a duplicate bogie — will be ignored automatically
+        trainFormation.add("Sleeper"); // Duplicate — ignored silently
 
-        // Step 4: Insert 'Pantry Car' at position 2 (between Sleeper and AC)
-        trainConsist.add(2, "Pantry Car");
+        // Step 4: Display the final train formation
+        System.out.println("\nFinal Train Formation:");
+        System.out.println(trainFormation);
 
-        System.out.println("\nAfter Inserting 'Pantry Car' at position 2:");
-        System.out.println(trainConsist);
+        // Step 5: Note about LinkedHashSet behaviour
+        System.out.println("\nNote:");
+        System.out.println("LinkedHashSet preserves insertion order and removes duplicates automatically.");
 
-        // Step 5: Remove the first and last bogies
-        trainConsist.removeFirst(); // Removes 'Engine'
-        trainConsist.removeLast();  // Removes 'Guard'
-
-        System.out.println("\nAfter Removing First and Last Bogie:");
-        System.out.println(trainConsist);
-
-        System.out.println("\nUC4 ordered consist operations completed...");
+        System.out.println("\nUC5 formation setup completed...");
     }
 }
