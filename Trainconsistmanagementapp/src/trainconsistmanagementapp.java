@@ -1,51 +1,45 @@
-import java.util.ArrayList;
-import java.util.List;
-
-// Bogie class reused from previous UCs
-class Bogie {
-    String name;
-    int capacity;
-
-    Bogie(String name, int capacity) {
-        this.name = name;
-        this.capacity = capacity;
-    }
-
-    @Override
-    public String toString() {
-        return name + " -> " + capacity;
-    }
-}
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.Scanner;
 
 public class trainconsistmanagementapp {
 
     public static void main(String[] args) {
 
         System.out.println("============================================");
-        System.out.println(" UC10 - Count Total Seats in Train");
+        System.out.println(" UC11 - Validate Train ID and Cargo Code");
         System.out.println("============================================");
 
-        // Step 1: Create the list of bogies
-        List<Bogie> bogieList = new ArrayList<>();
-        bogieList.add(new Bogie("Sleeper", 72));
-        bogieList.add(new Bogie("AC Chair", 56));
-        bogieList.add(new Bogie("First Class", 24));
-        bogieList.add(new Bogie("Sleeper", 70));
+        Scanner scanner = new Scanner(System.in);
 
-        // Step 2: Display all bogies
-        System.out.println("\nBogies in Train:");
-        for (Bogie bogie : bogieList) {
-            System.out.println(bogie);
-        }
+        // Step 1: Accept user input for Train ID and Cargo Code
+        System.out.print("\nEnter Train ID (Format: TRN-1234): ");
+        String trainID = scanner.nextLine().trim();
 
-        // Step 3: Use Stream map() + reduce() to compute total seating capacity
-        int totalCapacity = bogieList.stream()
-                .map(b -> b.capacity)           // Extract capacity from each Bogie
-                .reduce(0, Integer::sum);        // Sum all capacities, starting from 0
+        System.out.print("Enter Cargo Code (Format: PET-AB): ");
+        String cargoCode = scanner.nextLine().trim();
 
-        // Step 4: Display the total seating capacity
-        System.out.println("\nTotal Seating Capacity of Train: " + totalCapacity);
+        // Step 2: Define regex patterns
+        // Train ID: "TRN-" followed by exactly 4 digits
+        Pattern trainIDPattern = Pattern.compile("TRN-\\d{4}");
 
-        System.out.println("\nUC10 aggregation completed...");
+        // Cargo Code: "PET-" followed by exactly 2 uppercase letters
+        Pattern cargoCodePattern = Pattern.compile("PET-[A-Z]{2}");
+
+        // Step 3: Create Matcher objects for each input
+        Matcher trainIDMatcher = trainIDPattern.matcher(trainID);
+        Matcher cargoCodeMatcher = cargoCodePattern.matcher(cargoCode);
+
+        // Step 4: Validate using matches() and display results
+        boolean isTrainIDValid = trainIDMatcher.matches();
+        boolean isCargoCodeValid = cargoCodeMatcher.matches();
+
+        System.out.println("\nValidation Results:");
+        System.out.println("Train ID Valid: " + isTrainIDValid);
+        System.out.println("Cargo Code Valid: " + isCargoCodeValid);
+
+        scanner.close();
+
+        System.out.println("\nUC11 validation completed...");
     }
 }
