@@ -1,32 +1,40 @@
-import java.util.HashSet;
+import java.util.LinkedList;
 
 public class trainconsistmanagementapp {
 
     public static void main(String[] args) {
 
         System.out.println("========================================");
-        System.out.println(" UC3 - Track Unique Bogie IDs");
+        System.out.println(" UC4 - Maintain Ordered Bogie Consist");
         System.out.println("========================================");
 
-        // Step 1: Create a HashSet to store unique bogie IDs
-        HashSet<String> bogieIDs = new HashSet<>();
+        // Step 1: Create a LinkedList to maintain ordered bogie consist
+        LinkedList<String> trainConsist = new LinkedList<>();
 
-        // Step 2: Add bogie IDs — including intentional duplicates
-        bogieIDs.add("BG101");
-        bogieIDs.add("BG102");
-        bogieIDs.add("BG103");
-        bogieIDs.add("BG104");
-        bogieIDs.add("BG101"); // Duplicate — will be ignored automatically
-        bogieIDs.add("BG102"); // Duplicate — will be ignored automatically
+        // Step 2: Add bogies in physical train sequence
+        trainConsist.add("Engine");
+        trainConsist.add("Sleeper");
+        trainConsist.add("AC");
+        trainConsist.add("Cargo");
+        trainConsist.add("Guard");
 
-        // Step 3: Display the final set (duplicates removed automatically)
-        System.out.println("\nBogie IDs After Insertion:");
-        System.out.println(bogieIDs);
+        // Step 3: Display initial consist
+        System.out.println("\nInitial Train Consist:");
+        System.out.println(trainConsist);
 
-        // Step 4: Note about HashSet behaviour
-        System.out.println("\nNote:");
-        System.out.println("Duplicates are automatically ignored by HashSet.");
+        // Step 4: Insert 'Pantry Car' at position 2 (between Sleeper and AC)
+        trainConsist.add(2, "Pantry Car");
 
-        System.out.println("\nUC3 uniqueness validation completed...");
+        System.out.println("\nAfter Inserting 'Pantry Car' at position 2:");
+        System.out.println(trainConsist);
+
+        // Step 5: Remove the first and last bogies
+        trainConsist.removeFirst(); // Removes 'Engine'
+        trainConsist.removeLast();  // Removes 'Guard'
+
+        System.out.println("\nAfter Removing First and Last Bogie:");
+        System.out.println(trainConsist);
+
+        System.out.println("\nUC4 ordered consist operations completed...");
     }
 }
