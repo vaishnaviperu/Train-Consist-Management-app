@@ -1,27 +1,43 @@
-// Custom Exception class for invalid bogie capacity
-class InvalidCapacityException extends Exception {
-    public InvalidCapacityException(String message) {
+// Custom Runtime Exception for unsafe cargo assignments
+class CargoSafetyException extends RuntimeException {
+    public CargoSafetyException(String message) {
         super(message);
     }
 }
 
-// PassengerBogie class with capacity validation in constructor
-class PassengerBogie {
-    String type;
-    int capacity;
+// GoodsBogie class with cargo assignment logic
+class GoodsBogie {
+    String shape;   // e.g., Cylindrical, Rectangular
+    String cargo;   // assigned cargo type
 
-    // Constructor throws custom exception if capacity is invalid
-    PassengerBogie(String type, int capacity) throws InvalidCapacityException {
-        if (capacity <= 0) {
-            throw new InvalidCapacityException("Capacity must be greater than zero");
+    GoodsBogie(String shape) {
+        this.shape = shape;
+        this.cargo = null;
+    }
+
+    // Method to assign cargo with safety validation
+    void assignCargo(String cargoType) {
+        try {
+            // Safety Rule: Petroleum must NOT be assigned to Rectangular bogies
+            if (shape.equals("Rectangular") && cargoType.equals("Petroleum")) {
+                throw new CargoSafetyException("Unsafe cargo assignment!");
+            }
+
+            // Safe assignment
+            this.cargo = cargoType;
+            System.out.println("Cargo assigned successfully -> " + cargoType);
+
+        } catch (CargoSafetyException e) {
+            System.out.println("Error: " + e.getMessage());
+        } finally {
+            // Always executes — for logging or cleanup
+            System.out.println("Cargo validation completed for " + shape + " bogie");
         }
-        this.type = type;
-        this.capacity = capacity;
     }
 
     @Override
     public String toString() {
-        return type + " -> " + capacity;
+        return shape + " -> " + (cargo != null ? cargo : "No cargo assigned");
     }
 }
 
@@ -30,33 +46,19 @@ public class trainconsistmanagementapp {
     public static void main(String[] args) {
 
         System.out.println("============================================");
-        System.out.println(" UC14 - Handle Invalid Bogie Capacity");
+        System.out.println(" UC15 - Safe Cargo Assignment");
         System.out.println("============================================");
 
-        // Test 1: Valid capacity — bogie created successfully
-        try {
-            PassengerBogie validBogie = new PassengerBogie("Sleeper", 72);
-            System.out.println("\nCreated Bogie: " + validBogie);
-        } catch (InvalidCapacityException e) {
-            System.out.println("Error: " + e.getMessage());
-        }
+        // Test 1: Safe assignment — Cylindrical bogie with Petroleum (valid)
+        GoodsBogie cylindricalBogie = new GoodsBogie("Cylindrical");
+        cylindricalBogie.assignCargo("Petroleum");
 
-        // Test 2: Invalid capacity (zero) — exception thrown
-        try {
-            PassengerBogie invalidBogie = new PassengerBogie("AC Chair", 0);
-            System.out.println("Created Bogie: " + invalidBogie);
-        } catch (InvalidCapacityException e) {
-            System.out.println("Error: " + e.getMessage());
-        }
+        System.out.println();
 
-        // Test 3: Invalid capacity (negative) — exception thrown
-        try {
-            PassengerBogie negativeBogie = new PassengerBogie("First Class", -10);
-            System.out.println("Created Bogie: " + negativeBogie);
-        } catch (InvalidCapacityException e) {
-            System.out.println("Error: " + e.getMessage());
-        }
+        // Test 2: Unsafe assignment — Rectangular bogie with Petroleum (invalid)
+        GoodsBogie rectangularBogie = new GoodsBogie("Rectangular");
+        rectangularBogie.assignCargo("Petroleum");
 
-        System.out.println("\nUC14 exception handling completed...");
+        System.out.println("\nUC15 runtime handling completed...");
     }
 }
