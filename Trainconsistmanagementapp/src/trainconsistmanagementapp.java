@@ -1,19 +1,19 @@
 import java.util.ArrayList;
 import java.util.List;
 
-// Bogie class reused from previous UCs
-class Bogie {
-    String name;
-    int capacity;
+// GoodsBogie class with type and cargo fields
+class GoodsBogie {
+    String type;   // e.g., Cylindrical, Open, Box
+    String cargo;  // e.g., Petroleum, Coal, Grain
 
-    Bogie(String name, int capacity) {
-        this.name = name;
-        this.capacity = capacity;
+    GoodsBogie(String type, String cargo) {
+        this.type = type;
+        this.cargo = cargo;
     }
 
     @Override
     public String toString() {
-        return name + " -> " + capacity;
+        return type + " -> " + cargo;
     }
 }
 
@@ -22,30 +22,35 @@ public class trainconsistmanagementapp {
     public static void main(String[] args) {
 
         System.out.println("============================================");
-        System.out.println(" UC10 - Count Total Seats in Train");
+        System.out.println(" UC12 - Safety Compliance Check for Goods Bogies");
         System.out.println("============================================");
 
-        // Step 1: Create the list of bogies
-        List<Bogie> bogieList = new ArrayList<>();
-        bogieList.add(new Bogie("Sleeper", 72));
-        bogieList.add(new Bogie("AC Chair", 56));
-        bogieList.add(new Bogie("First Class", 24));
-        bogieList.add(new Bogie("Sleeper", 70));
+        // Step 1: Create a list of goods bogies with type and cargo
+        List<GoodsBogie> goodsBogies = new ArrayList<>();
+        goodsBogies.add(new GoodsBogie("Cylindrical", "Petroleum")); // Valid
+        goodsBogies.add(new GoodsBogie("Open", "Coal"));             // Valid (non-cylindrical)
+        goodsBogies.add(new GoodsBogie("Box", "Grain"));             // Valid (non-cylindrical)
+        goodsBogies.add(new GoodsBogie("Cylindrical", "Coal"));      // INVALID — violates safety rule
 
-        // Step 2: Display all bogies
-        System.out.println("\nBogies in Train:");
-        for (Bogie bogie : bogieList) {
+        // Step 2: Display all goods bogies
+        System.out.println("\nGoods Bogies in Train:");
+        for (GoodsBogie bogie : goodsBogies) {
             System.out.println(bogie);
         }
 
-        // Step 3: Use Stream map() + reduce() to compute total seating capacity
-        int totalCapacity = bogieList.stream()
-                .map(b -> b.capacity)           // Extract capacity from each Bogie
-                .reduce(0, Integer::sum);        // Sum all capacities, starting from 0
+        // Step 3: Apply safety rule using allMatch()
+        // Rule: Cylindrical bogies must carry only Petroleum
+        boolean isSafetyCompliant = goodsBogies.stream()
+                .allMatch(b -> !b.type.equals("Cylindrical") || b.cargo.equals("Petroleum"));
 
-        // Step 4: Display the total seating capacity
-        System.out.println("\nTotal Seating Capacity of Train: " + totalCapacity);
+        // Step 4: Display safety compliance result
+        System.out.println("\nSafety Compliance Status: " + isSafetyCompliant);
+        if (isSafetyCompliant) {
+            System.out.println("Train Formation is SAFE.");
+        } else {
+            System.out.println("Train Formation is NOT SAFE.");
+        }
 
-        System.out.println("\nUC10 aggregation completed...");
+        System.out.println("\nUC12 safety validation completed...");
     }
 }
